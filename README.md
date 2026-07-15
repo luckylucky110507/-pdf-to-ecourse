@@ -58,4 +58,4 @@ Users can upload any PDF (books, research papers, study material, documentation)
 
 ## Author
 
-Built by Princ as part of the In2Peta Services internship assessment.
+Built by lucky as part of the In2Peta Services internship assessment.
