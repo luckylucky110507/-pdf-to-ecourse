@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
                 },
             ],
             temperature: 0.3,
+            response_format: { type: "json_object" },
         });
 
         const aiResponse = completion.choices[0]?.message?.content;
@@ -76,11 +77,18 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const cleaned = aiResponse
+        let cleaned = aiResponse
             .replace(/^```json/i, "")
             .replace(/^```/, "")
             .replace(/```$/, "")
             .trim();
+
+        // Extract just the JSON object in case AI added extra text before/after
+        const firstBrace = cleaned.indexOf("{");
+        const lastBrace = cleaned.lastIndexOf("}");
+        if (firstBrace !== -1 && lastBrace !== -1) {
+            cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+        }
 
         const course = JSON.parse(cleaned);
 
