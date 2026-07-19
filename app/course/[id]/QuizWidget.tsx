@@ -69,17 +69,17 @@ export default function QuizWidget({ chapterId }: { chapterId: string }) {
     }
 
     return (
-        <div className="mt-4">
+        <div className="mt-2">
             <button
                 onClick={startQuiz}
-                className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-zinc-800 transition-colors"
+                className="bg-[var(--accent)] text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
             >
                 Take Quiz
             </button>
 
             {open && (
-                <div className="mt-4 bg-white border border-zinc-200 rounded-xl p-5">
-                    {loading && <p className="text-zinc-500 text-sm">Generating quiz...</p>}
+                <div className="mt-4 bg-[var(--surface-2)] border border-[var(--border)] rounded-xl p-5">
+                    {loading && <p className="text-[var(--ink-muted)] text-sm">Generating quiz...</p>}
 
                     {!loading && questions.length === 0 && (
                         <p className="text-red-500 text-sm">Could not generate quiz. Try again.</p>
@@ -89,24 +89,24 @@ export default function QuizWidget({ chapterId }: { chapterId: string }) {
                         <div className="space-y-6">
                             {questions.map((q, i) => (
                                 <div key={i}>
-                                    <p className="font-semibold mb-2">
+                                    <p className="font-semibold mb-2 text-[var(--ink)]">
                                         {i + 1}. {q.question}
                                     </p>
                                     <div className="space-y-1">
                                         {q.options.map((opt, oi) => {
                                             const isSelected = answers[i] === opt
                                             const isCorrect = opt === q.correct_answer
-                                            let optionClass = "border-zinc-300"
+                                            let optionClass = "border-[var(--border)]"
                                             if (submitted) {
-                                                if (isCorrect) optionClass = "border-green-500 bg-green-50"
-                                                else if (isSelected && !isCorrect) optionClass = "border-red-500 bg-red-50"
+                                                if (isCorrect) optionClass = "border-green-500 bg-green-500/10"
+                                                else if (isSelected && !isCorrect) optionClass = "border-red-500 bg-red-500/10"
                                             } else if (isSelected) {
-                                                optionClass = "border-black bg-zinc-100"
+                                                optionClass = "border-[var(--primary)] bg-[var(--primary)]/10"
                                             }
                                             return (
                                                 <label
                                                     key={oi}
-                                                    className={`flex items-center gap-2 border rounded-lg px-3 py-2 text-sm cursor-pointer ${optionClass}`}
+                                                    className={`flex items-center gap-2 border rounded-lg px-3 py-2 text-sm cursor-pointer text-[var(--ink)] ${optionClass}`}
                                                 >
                                                     <input
                                                         type="radio"
@@ -114,6 +114,7 @@ export default function QuizWidget({ chapterId }: { chapterId: string }) {
                                                         checked={isSelected}
                                                         onChange={() => selectAnswer(i, opt)}
                                                         disabled={submitted}
+                                                        className="accent-[var(--primary)]"
                                                     />
                                                     {opt}
                                                 </label>
@@ -121,7 +122,7 @@ export default function QuizWidget({ chapterId }: { chapterId: string }) {
                                         })}
                                     </div>
                                     {submitted && (
-                                        <p className="text-xs text-zinc-500 mt-2">
+                                        <p className="text-xs text-[var(--ink-muted)] mt-2">
                                             <b>Explanation:</b> {q.explanation}
                                         </p>
                                     )}
@@ -132,12 +133,12 @@ export default function QuizWidget({ chapterId }: { chapterId: string }) {
                                 <button
                                     onClick={submitQuiz}
                                     disabled={Object.keys(answers).length !== questions.length}
-                                    className="bg-black text-white px-5 py-2 rounded-lg text-sm hover:bg-zinc-800 disabled:bg-zinc-300"
+                                    className="bg-[var(--primary)] text-white px-5 py-2 rounded-lg text-sm hover:bg-[var(--primary-hover)] disabled:opacity-40"
                                 >
                                     Submit Quiz
                                 </button>
                             ) : (
-                                <div className="font-semibold text-lg">
+                                <div className="font-semibold text-lg text-[var(--ink)]">
                                     Your Score: {score}%
                                 </div>
                             )}

@@ -55,24 +55,22 @@ export default function ChatWidget({
 
     return (
         <>
-            {/* Floating toggle button */}
             <button
                 onClick={() => setOpen(!open)}
-                className="fixed bottom-6 right-6 bg-black text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors z-50"
+                className="fixed bottom-6 right-6 bg-[var(--primary)] text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:bg-[var(--primary-hover)] transition-colors z-50"
             >
                 {open ? "✕" : "💬"}
             </button>
 
-            {/* Chat panel */}
             {open && (
-                <div className="fixed bottom-24 right-6 w-96 max-w-[90vw] h-[500px] bg-white rounded-2xl shadow-2xl flex flex-col z-50 border border-zinc-200">
-                    <div className="px-4 py-3 border-b border-zinc-200 font-semibold text-zinc-900">
+                <div className="fixed bottom-24 right-6 w-96 max-w-[90vw] h-[500px] bg-[var(--surface)] rounded-2xl shadow-2xl flex flex-col z-50 border border-[var(--border)]">
+                    <div className="px-4 py-3 border-b border-[var(--border)] font-semibold text-[var(--ink)]">
                         Ask the AI Tutor
                     </div>
 
                     <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
                         {messages.length === 0 && (
-                            <p className="text-sm text-zinc-400">
+                            <p className="text-sm text-[var(--ink-muted)]">
                                 Ask anything about this course — explain a concept, summarize a chapter, or suggest what to study next.
                             </p>
                         )}
@@ -80,31 +78,31 @@ export default function ChatWidget({
                             <div
                                 key={i}
                                 className={`text-sm rounded-xl px-3 py-2 max-w-[85%] ${m.role === "user"
-                                        ? "bg-black text-white ml-auto"
-                                        : "bg-zinc-100 text-zinc-800"
+                                        ? "bg-[var(--primary)] text-white ml-auto"
+                                        : "bg-[var(--surface-2)] text-[var(--ink)]"
                                     }`}
                             >
                                 {m.content}
                             </div>
                         ))}
                         {loading && (
-                            <div className="text-sm text-zinc-400">Thinking...</div>
+                            <div className="text-sm text-[var(--ink-muted)]">Thinking...</div>
                         )}
                         <div ref={bottomRef} />
                     </div>
 
-                    <div className="p-3 border-t border-zinc-200 flex gap-2">
+                    <div className="p-3 border-t border-[var(--border)] flex gap-2">
                         <input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                             placeholder="Type your question..."
-                            className="flex-1 border border-zinc-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-zinc-500"
+                            className="flex-1 border border-[var(--border)] bg-[var(--bg)] text-[var(--ink)] rounded-lg px-3 py-2 text-sm outline-none focus:border-[var(--primary)]"
                         />
                         <button
                             onClick={sendMessage}
                             disabled={loading}
-                            className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-zinc-800 disabled:bg-zinc-300"
+                            className="bg-[var(--primary)] text-white px-4 py-2 rounded-lg text-sm hover:bg-[var(--primary-hover)] disabled:opacity-40"
                         >
                             Send
                         </button>

@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import ChatWidget from "./ChatWidget";
 import QuizWidget from "./QuizWidget";
+import ThemeToggle from "../../ThemeToggle";
+
 export default function CourseView({
     course,
     chapters,
@@ -29,8 +32,6 @@ export default function CourseView({
         }
 
         const newValue = !progress[lessonId];
-
-        // Optimistic UI update
         setProgress((prev) => ({ ...prev, [lessonId]: newValue }));
         setSaving(lessonId);
 
@@ -41,12 +42,9 @@ export default function CourseView({
                 body: JSON.stringify({ lessonId, completed: newValue }),
             });
 
-            if (!res.ok) {
-                throw new Error("Failed to save progress");
-            }
+            if (!res.ok) throw new Error("Failed to save progress");
         } catch (err) {
             console.error(err);
-            // Revert on failure
             setProgress((prev) => ({ ...prev, [lessonId]: !newValue }));
             alert("Failed to save progress. Try again.");
         } finally {
@@ -54,7 +52,6 @@ export default function CourseView({
         }
     };
 
-    // Calculate completion %
     const allLessons = chapters.flatMap((ch) =>
         ch.topics.flatMap((t: any) => t.lessons || [])
     );
@@ -65,32 +62,39 @@ export default function CourseView({
             : 0;
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8 text-black">
-            <div className="max-w-5xl mx-auto">
+        <div className="min-h-screen bg-[var(--bg)]">
+            <div className="max-w-5xl mx-auto p-8">
 
-                <h1 className="text-4xl font-bold mb-4">
+                <div className="flex justify-between items-start mb-6">
+                    <Link href="/dashboard" className="text-sm text-[var(--ink-muted)] hover:text-[var(--ink)]">
+                        ← Back to dashboard
+                    </Link>
+                    <ThemeToggle />
+                </div>
+
+                <h1 className="text-4xl font-bold mb-4 text-[var(--ink)]">
                     {course?.title}
                 </h1>
 
-                <p className="text-lg text-gray-700 mb-4">
+                <p className="text-lg text-[var(--ink-muted)] mb-6">
                     {course?.description}
                 </p>
 
                 {/* Progress bar */}
-                <div className="mb-8">
-                    <div className="flex justify-between text-sm font-semibold mb-1">
+                <div className="mb-8 bg-[var(--surface)] border border-[var(--border)] rounded-xl p-4">
+                    <div className="flex justify-between text-sm font-semibold mb-2 text-[var(--ink)]">
                         <span>Course Progress</span>
                         <span>{completionPercent}% ({completedCount}/{allLessons.length})</span>
                     </div>
-                    <div className="w-full bg-gray-300 rounded-full h-3">
+                    <div className="w-full bg-[var(--surface-2)] rounded-full h-3">
                         <div
-                            className="bg-green-500 h-3 rounded-full transition-all"
+                            className="bg-[var(--primary)] h-3 rounded-full transition-all"
                             style={{ width: `${completionPercent}%` }}
                         />
                     </div>
                 </div>
 
-                <h2 className="text-3xl font-bold mb-6">
+                <h2 className="text-3xl font-bold mb-6 text-[var(--ink)]">
                     Chapters
                 </h2>
 
@@ -98,10 +102,13 @@ export default function CourseView({
                     chapters.map((chapter: any, index: number) => (
                         <div
                             key={chapter.id}
-                            className="bg-white shadow rounded-xl p-6 mb-6"
+                            className="bg-[var(--surface)] border border-[var(--border)] shadow-sm rounded-2xl p-6 mb-6"
                         >
-                            <h3 className="text-2xl font-semibold mb-4">
-                                Chapter {index + 1}: {chapter.title}
+                            <p className="text-xs uppercase tracking-wider text-[var(--accent)] font-semibold mb-1">
+                                Chapter {index + 1}
+                            </p>
+                            <h3 className="text-2xl font-semibold mb-4 text-[var(--ink)]">
+                                {chapter.title}
                             </h3>
 
                             <QuizWidget chapterId={chapter.id} />
@@ -110,20 +117,20 @@ export default function CourseView({
                                 chapter.topics.map((topic: any, topicIndex: number) => (
                                     <div
                                         key={topic.id}
-                                        className="border rounded-lg p-4 mb-4"
+                                        className="border border-[var(--border)] rounded-xl p-4 mb-4 mt-4"
                                     >
                                         <button
                                             onClick={() => toggleTopic(topic.id)}
                                             className="w-full text-left"
                                         >
-                                            <h4 className="text-xl font-semibold flex justify-between items-center">
+                                            <h4 className="text-xl font-semibold flex justify-between items-center text-[var(--ink)]">
                                                 <span>{topicIndex + 1}. {topic.title}</span>
-                                                <span className="text-sm text-blue-600">
+                                                <span className="text-sm text-[var(--primary)]">
                                                     {openTopic === topic.id ? "Hide Lessons ▲" : "Show Lessons ▼"}
                                                 </span>
                                             </h4>
 
-                                            <p className="mt-2 text-gray-700">
+                                            <p className="mt-2 text-[var(--ink-muted)]">
                                                 {topic.summary}
                                             </p>
                                         </button>
@@ -134,20 +141,20 @@ export default function CourseView({
                                                     topic.lessons.map((lesson: any) => (
                                                         <div
                                                             key={lesson.id}
-                                                            className="bg-gray-50 border-l-4 border-blue-400 p-4 rounded"
+                                                            className="bg-[var(--surface-2)] border-l-4 border-[var(--primary)] p-4 rounded-lg"
                                                         >
                                                             <div className="flex items-start justify-between gap-4">
-                                                                <h5 className="font-bold text-lg mb-2">
+                                                                <h5 className="font-bold text-lg mb-2 text-[var(--ink)]">
                                                                     {lesson.title}
                                                                 </h5>
 
-                                                                <label className="flex items-center gap-2 text-sm whitespace-nowrap cursor-pointer">
+                                                                <label className="flex items-center gap-2 text-sm whitespace-nowrap cursor-pointer text-[var(--ink)]">
                                                                     <input
                                                                         type="checkbox"
                                                                         checked={!!progress[lesson.id]}
                                                                         onChange={() => toggleLessonComplete(lesson.id)}
                                                                         disabled={saving === lesson.id}
-                                                                        className="w-4 h-4"
+                                                                        className="w-4 h-4 accent-[var(--primary)]"
                                                                     />
                                                                     {saving === lesson.id
                                                                         ? "Saving..."
@@ -157,16 +164,16 @@ export default function CourseView({
                                                                 </label>
                                                             </div>
 
-                                                            <p className="text-gray-800 mb-3">
+                                                            <p className="text-[var(--ink)] mb-3">
                                                                 {lesson.content}
                                                             </p>
 
                                                             {lesson.key_takeaways && lesson.key_takeaways.length > 0 && (
                                                                 <div>
-                                                                    <p className="font-semibold text-sm text-gray-600 mb-1">
+                                                                    <p className="font-semibold text-sm text-[var(--ink-muted)] mb-1">
                                                                         Key Takeaways:
                                                                     </p>
-                                                                    <ul className="list-disc list-inside text-sm text-gray-700">
+                                                                    <ul className="list-disc list-inside text-sm text-[var(--ink-muted)]">
                                                                         {lesson.key_takeaways.map((point: string, i: number) => (
                                                                             <li key={i}>{point}</li>
                                                                         ))}
