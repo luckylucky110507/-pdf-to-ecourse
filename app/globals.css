@@ -1,26 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #FAF9F5;
+  --surface: #FFFFFF;
+  --surface-2: #F1EFE9;
+  --ink: #1C2321;
+  --ink-muted: #5A5F5C;
+  --primary: #0F6B5C;
+  --primary-hover: #0B5347;
+  --accent: #D97706;
+  --border: #E4E1D8;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  --bg: #10151A;
+  --surface: #1A2129;
+  --surface-2: #212A33;
+  --ink: #E8E6E1;
+  --ink-muted: #9CA3A8;
+  --primary: #34D0AF;
+  --primary-hover: #5EE0C4;
+  --accent: #F0A020;
+  --border: #2A333D;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--bg);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Fraunces', serif;
 }
