@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import ChatWidget from "./ChatWidget";
 import QuizWidget from "./QuizWidget";
+import SummaryWidget from "./SummaryWidget";
 import ThemeToggle from "../../ThemeToggle";
 
 export default function CourseView({
@@ -93,6 +94,8 @@ export default function CourseView({
                         />
                     </div>
                 </div>
+
+                <SummaryWidget courseId={course?.id} />
 
                 <h2 className="text-3xl font-bold mb-6 text-[var(--ink)]">
                     Chapters
