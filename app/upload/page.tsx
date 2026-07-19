@@ -1,17 +1,21 @@
 "use client"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import ThemeToggle from "../ThemeToggle"
 
 export default function UploadPage() {
     const [file, setFile] = useState<File | null>(null)
     const [loading, setLoading] = useState(false)
+    const [status, setStatus] = useState<string>("")
     const [result, setResult] = useState<any>(null)
+    const router = useRouter()
 
     const handleUpload = async () => {
         if (!file) return
         setLoading(true)
         setResult(null)
+        setStatus("Uploading PDF...")
 
         const formData = new FormData()
         formData.append("file", file)
@@ -22,9 +26,38 @@ export default function UploadPage() {
                 body: formData,
             })
             const data = await res.json()
+
+            if (data.error) {
+                setResult({ error: data.error })
+                setLoading(false)
+                setStatus("")
+                return
+            }
+
             setResult(data)
+            setStatus("Generating your course with AI... this may take a moment")
+
+            // Now trigger course generation
+            const genRes = await fetch("/api/generate-course", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ documentId: data.documentId }),
+            })
+            const genData = await genRes.json()
+
+            if (genData.error) {
+                setResult({ error: genData.error })
+                setLoading(false)
+                setStatus("")
+                return
+            }
+
+            setStatus("Course ready! Redirecting...")
+            router.push(`/course/${genData.courseId}`)
+
         } catch (err) {
             setResult({ error: "Upload failed" })
+            setStatus("")
         } finally {
             setLoading(false)
         }
@@ -61,22 +94,16 @@ export default function UploadPage() {
                         disabled={!file || loading}
                         className="mt-5 w-full bg-[var(--primary)] text-white font-medium py-3 rounded-xl transition-colors hover:bg-[var(--primary-hover)] disabled:opacity-40 disabled:cursor-not-allowed"
                     >
-                        {loading ? "Uploading..." : "Upload"}
+                        {loading ? "Processing..." : "Upload"}
                     </button>
 
-                    {result && (
+                    {status && (
+                        <p className="mt-4 text-sm text-[var(--ink-muted)] text-center">{status}</p>
+                    )}
+
+                    {result?.error && (
                         <div className="mt-6 border-t border-[var(--border)] pt-4">
-                            {result.error ? (
-                                <p className="text-red-500 text-sm">{result.error}</p>
-                            ) : (
-                                <div className="space-y-2 text-sm text-[var(--ink)]">
-                                    <p><span className="font-semibold">Title:</span> {result.title}</p>
-                                    <p><span className="font-semibold">Text length:</span> {result.fullTextLength}</p>
-                                    <p className="text-[var(--ink-muted)] line-clamp-4">
-                                        <span className="font-semibold text-[var(--ink)]">Preview:</span> {result.textPreview}
-                                    </p>
-                                </div>
-                            )}
+                            <p className="text-red-500 text-sm">{result.error}</p>
                         </div>
                     )}
                 </div>
