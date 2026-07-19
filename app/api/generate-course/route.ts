@@ -49,15 +49,15 @@ export async function POST(req: NextRequest) {
             "  ]\n" +
             "}\n\n" +
             "Instructions:\n" +
-            "- Generate 3-5 chapters.\n" +
-            "- Each chapter should have 2-4 topics.\n" +
-            "- Each topic should have 2 lessons.\n" +
-            "- Every lesson should include detailed content and key takeaways.\n\n" +
+            "- Generate 2-3 chapters.\n" +
+            "- Each chapter should have 1-2 topics.\n" +
+            "- Each topic should have 1 lesson.\n" +
+            "- Every lesson should include concise content (under 150 words) and key takeaways.\n\n" +
             "PDF Content:\n" +
             document.raw_text;
 
         const completion = await groq.chat.completions.create({
-            model: "llama-3.3-70b-versatile",
+            model: "llama-3.1-8b-instant",
             messages: [
                 {
                     role: "user",
