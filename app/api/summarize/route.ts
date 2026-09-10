@@ -59,7 +59,7 @@ Write a summary with:
 Keep it concise and scannable. Do not use markdown headers, just plain text with clear paragraph breaks and "- " for bullets.`
 
         const completion = await groq.chat.completions.create({
-            model: "llama-3.3-70b-versatile",
+            model: "openai/gpt-oss-120b",
             messages: [{ role: "user", content: prompt }],
         })
 
